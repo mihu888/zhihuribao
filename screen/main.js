@@ -1,12 +1,34 @@
-import { Text, StyleSheet, View, ScrollView, SafeAreaView, ActivityIndicator, RefreshControl, FlatList, TouchableOpacity, Image, Dimensions, Alert} from 'react-native'
-import React, { Component } from 'react'
+import { Text, StyleSheet, StatusBar, View, ScrollView, SafeAreaView, ActivityIndicator, RefreshControl, FlatList, TouchableOpacity, Image, Dimensions, Alert} from 'react-native'
+import React, { Component, useState, useCallback } from 'react'
 import {Divider} from '@rneui/themed'
 import Swiper from 'react-native-swiper';
 
+const wait = (timeout) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+}
+
 export default class mainscreen extends Component {
+  // const [refreshing, setRefreshing] = React.useState(false);
+
+  // const onRefresh = React.useCallback(() => {
+  //   setRefreshing(true);
+
+  //   wait(2000).then(() => setRefreshing(false));
+  // }, []);
+  refreshing = false;
+
+  onRefresh() {
+    this.refreshing = true;
+    wait(2000).then(() => {
+      this.refreshing = false;
+      this.setState({}); // 强制刷新组件，以便更新RefreshControl状态
+    });
+  }
   constructor(props){
     super(props)
-
+      
       this.state={
         isloading:true,
         news:{},
@@ -69,28 +91,39 @@ export default class mainscreen extends Component {
     .finally(() => {
       this.setState({isloading: true});
     });
-  }
+  };
+  
   render() {
+    
     return (
-      <SafeAreaView style = {styles.v}>
+      <SafeAreaView style = {{flex:1}}>
+        <StatusBar translucent backgroundColor="#ffffff" barStyle="dark-content" />
         <View style = {styles.vu}>
-          <View style={{width:75}}>
-            <Text style={{fontSize:40,textAlign:'center',flex:1}}>
-              {this.state.getday()}
-            </Text>
-            <Text style={{fontSize:18,textAlign:'center'}}>
-              {this.state.getmonth()}
+          <View style={{width:75,justifyContent:'center',alignItems:'center'}}>
+            <View style={{marginTop:6,flex:5}}>
+              <Text style={{fontSize:20,fontWeight:'bold',color:'black'}}>
+                {this.state.getday()}
+              </Text>
+            </View>
+            <View style={{marginBottom:6,flex:3}}>
+              <Text style={{fontSize:12,fontWeight:'bold',color:'black'}}>
+                {this.state.getmonth()}
+              </Text>
+            </View>
+          </View>
+          <Divider orientation='vertical' style={{marginVertical:10}} />
+          <View style={{justifyContent:'center',width:Dimensions.get('window').width-120}}>
+            <Text style={styles.time}>
+              {this.state.gettime()}
             </Text>
           </View>
-          <Divider orientation='vertical'/>
-          <Text style={styles.time}>
-            {this.state.gettime()}
-          </Text>
-          <TouchableOpacity>
-            <Image
-            source={require('../image/1.jpg')}
-            style={styles.tubiao}/>
-          </TouchableOpacity>
+          <View style={{flex:1,justifyContent:'center',marginTop:4}}>
+            <TouchableOpacity>
+              <Image
+              source={require('../image/1.jpg')}
+              style={styles.tubiao}/>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style = {styles.vd}>
           {/* <View>
@@ -104,6 +137,12 @@ export default class mainscreen extends Component {
             <FlatList
             data={this.state.news}
 
+            refreshControl={
+              <RefreshControl
+              refreshing={this.refreshing}
+              onRefresh={() => this.onRefresh()}
+              />
+            }
             renderItem={({item})=>{
               // if(this.state.it){
               //   this.setState({isloading:false})
@@ -121,11 +160,11 @@ export default class mainscreen extends Component {
               onPress={()=>{
                 url1=`https://news-at.zhihu.com/api/3/story/${item.id}`;
                 console.log(url1);
-                this.props.navigation.navigate('news',{url1:url1})
+                this.props.navigation.navigate('news',{url1:url1});
               }}
               >
                 <View style={{flexDirection:'row'}}>
-                  <View style={{height:90,justifyContent:'center',marginLeft:10,marginRight:10,width:305}}>
+                  <View style={{height:90,justifyContent:'center',marginLeft:10,marginRight:10,width:Dimensions.get('window').width-107}}>
                     <Text style={styles.itemtitle} numberOfLines={2}>
                       {item.title}
                     </Text>
@@ -170,16 +209,15 @@ export default class mainscreen extends Component {
 }
   
 const styles = StyleSheet.create({
-  v:{
-    flex:1
-  },
   vu:{
     flex:1,
     flexDirection:'row',
     backgroundColor:'white',
+    width:Dimensions.get('window').width,
+    marginTop: StatusBar.currentHeight,
   },
   vd:{
-    flex:10
+    flex:12
   },
   date:{
     fontSize:20,
@@ -188,14 +226,16 @@ const styles = StyleSheet.create({
     fontSize:20
   },
   time:{
-    fontSize:30,
-    textAlignVertical:'center',
+    fontSize:25,
+    fontWeight:'bold',
+    // textAlignVertical:'center',
     marginHorizontal:15,
+    color:'black',
   },
   tubiao:{
-    width:60,
-    height:60,
-    marginHorizontal:117,
+    width:35,
+    height:35,
+    // marginHorizontal:Dimensions.get('window').width-333,
     marginVertical:7
   },
   itemimage:{
@@ -205,7 +245,9 @@ const styles = StyleSheet.create({
 
   },
   itemtitle:{
-    fontSize:20,
+    fontSize:17,
+    fontWeight:'bold',
+    color:'black',
   },
   itemhint:{
     fontSize:10,

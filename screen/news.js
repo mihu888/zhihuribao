@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, FlatList, Image, TouchableOpacity, SafeAreaView } from 'react-native'
+import { Text, StyleSheet, StatusBar, View, FlatList, Image, TouchableOpacity, SafeAreaView } from 'react-native'
 import React, { Component } from 'react'
 import {WebView} from 'react-native-webview'
 import {Divider} from '@rneui/themed'
@@ -32,7 +32,8 @@ export default class newsscreen extends Component {
   render() {
     return (
       <SafeAreaView style={{flex:1}}>
-        <View style={{height:800,flex:16}}>
+        <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+        <View style={{height:800,flex:14}}>
             <WebView
             source={{html:'<div style="display:flex;justify-content:center;position: relative;"><img src='
             +this.state.image
@@ -51,15 +52,15 @@ export default class newsscreen extends Component {
             // `}
             />
         </View>
-        <View style={{flex:1, flexDirection:'row'}}>
-          <View style={{flex:1, alignItems:'center'}} >
+        <View style={{flex:1, flexDirection:'row',justifyContent:'center'}}>
+          <View style={{flex:1.5, alignItems:'center'}} >
             <TouchableOpacity
             onPress={()=>this.props.navigation.goBack()}
             >
-              <Ionicons name={'chevron-back-outline'} size={35} style={{flex:1,verticalAlign:'middle'}} />
+              <Ionicons name={'chevron-back-outline'} size={25} style={{flex:1,verticalAlign:'middle',color:'black'}} />
             </TouchableOpacity>
           </View>
-          <Divider orientation='vertical'/>
+          <Divider orientation='vertical' style={{marginVertical:10}} />
           <View style={{flex:2, alignItems:'center', justifyContent:'center'}} >
             <TouchableOpacity
             onPress={()=>{
@@ -68,17 +69,17 @@ export default class newsscreen extends Component {
               console.log(url1,url2);
               this.props.navigation.navigate('comment',{url1:url1,url2:url2})
             }}>
-              <Ionicons name={'chatbox-outline'} size={35} style={{flex:2,verticalAlign:'middle'}} />
+              <Ionicons name={'chatbox-outline'} size={25} style={{flex:2,verticalAlign:'middle',color:'black'}} />
             </TouchableOpacity>
           </View>
           <View style={{flex:2, alignItems:'center'}} ><TouchableOpacity>
-            <Ionicons name={'thumbs-up-outline'} size={35} style={{flex:2,verticalAlign:'middle'}} />
+            <Ionicons name={'thumbs-up-outline'} size={25} style={{flex:2,verticalAlign:'middle',color:'black'}} />
           </TouchableOpacity></View>
           <View style={{flex:2, alignItems:'center'}} ><TouchableOpacity>
-            <Ionicons name={'star-outline'} size={35} style={{flex:2,verticalAlign:'middle'}} />
+            <Ionicons name={'star-outline'} size={25} style={{flex:2,verticalAlign:'middle',color:'black'}} />
           </TouchableOpacity></View>
           <View style={{flex:2, alignItems:'center'}} ><TouchableOpacity>
-            <Ionicons name={'share-outline'} size={35} style={{flex:2,verticalAlign:'middle'}} />
+            <Ionicons name={'share-outline'} size={25} style={{flex:2,verticalAlign:'middle',color:'black'}} />
           </TouchableOpacity></View>
         </View>
       </SafeAreaView>

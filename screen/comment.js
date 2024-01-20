@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, ScrollView, SafeAreaView, FlatList, TouchableOpacity, Image, TextInput} from 'react-native'
+import { Text, StyleSheet, StatusBar, View, ScrollView, SafeAreaView, FlatList, TouchableOpacity, Image, TextInput} from 'react-native'
 import React, { Component } from 'react'
 import {Divider} from '@rneui/themed'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -40,25 +40,26 @@ export default class commentscreen extends Component {
   render() {
     return (
       <SafeAreaView style={{flex:1}}>
-        <View style={{flex:1,flexDirection:'row'}}>
+        <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+        <View style={{flex:1,flexDirection:'row',marginTop: StatusBar.currentHeight}}>
           <TouchableOpacity
           onPress={()=>this.props.navigation.goBack()}
           style={{flex:1}}>
             <Ionicons name={'chevron-back-outline'} size={35} style={{flex:1,verticalAlign:'middle'}} />
           </TouchableOpacity>
           <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-            <Text style={{fontSize:25}}>
+            <Text style={{fontSize:20}}>
               {this.state.lcomment.length+this.state.scomment.length}条评论
             </Text>
           </View>
           <View style={{flex:1}}></View>
         </View>
         <Divider orientation='horizontal'/>
-        <View style={{flex:14}}>
+        <View style={{flex:12}}>
           <ScrollView style={{marginHorizontal:15}} showsVerticalScrollIndicator={false}>
             <View style={{height:50}}>
               <Divider orientation='horizontal'/>
-              <Text style={{fontSize:20}}>
+              <Text style={{fontSize:18}}>
                 {this.state.lcomment.length}条长评
               </Text>
             </View>
@@ -73,13 +74,13 @@ export default class commentscreen extends Component {
                   style={{height:30,width:30,borderRadius:20}}
                   />
                   <View style={{justifyContent:'center',marginLeft:5}}>
-                    <Text style={{fontWeight:'bold',fontSize:20}}>
+                    <Text style={{fontWeight:'bold',fontSize:17}}>
                       {item.author}
                     </Text>
                   </View>
                 </View>
                 <View style={{marginLeft:35}}>
-                  <Text style={{fontSize:20}}>
+                  <Text style={{fontSize:17}}>
                     {item.content}
                   </Text>
                 </View>
@@ -89,7 +90,7 @@ export default class commentscreen extends Component {
             />
             <View style={{height:50}}>
               <Divider orientation='horizontal'/>
-              <Text style={{fontSize:20}}>
+              <Text style={{fontSize:18}}>
                 {this.state.scomment.length}条短评
               </Text>
             </View>
@@ -104,13 +105,13 @@ export default class commentscreen extends Component {
                   style={{height:30,width:30,borderRadius:20}}
                   />
                   <View style={{justifyContent:'center',marginLeft:5}}>
-                    <Text style={{fontWeight:'bold',fontSize:20}}>
+                    <Text style={{fontWeight:'bold',fontSize:17}}>
                       {item.author}
                     </Text>
                   </View>
                 </View>
                 <View style={{marginLeft:35}}>
-                  <Text style={{fontSize:20}}>
+                  <Text style={{fontSize:17}}>
                     {item.content}
                   </Text>
                 </View>
