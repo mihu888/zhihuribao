@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, ScrollView, SafeAreaView, RefreshControl, FlatList, TouchableOpacity, Image, Dimensions} from 'react-native'
+import { Text, StyleSheet, View, ScrollView, SafeAreaView, ActivityIndicator, RefreshControl, FlatList, TouchableOpacity, Image, Dimensions, Alert} from 'react-native'
 import React, { Component } from 'react'
 import {Divider} from '@rneui/themed'
 import Swiper from 'react-native-swiper';
@@ -12,9 +12,11 @@ export default class mainscreen extends Component {
         news:{},
         date:{},
         url:'',
+        it:false,
         date:new Date(),
         pastdate:new Date().getTime(),
         day:0,
+        time:'',
         datestring(date){
           var year = date.getFullYear();
           var month = (date.getMonth() + 1).toString().padStart(2,'0');
@@ -65,7 +67,7 @@ export default class mainscreen extends Component {
       })
     .catch((error) => console.error(error))
     .finally(() => {
-      this.setState({isloading: false});
+      this.setState({isloading: true});
     });
   }
   render() {
@@ -102,7 +104,19 @@ export default class mainscreen extends Component {
             <FlatList
             data={this.state.news}
 
-            renderItem={({item})=>(
+            renderItem={({item})=>{
+              // if(this.state.it){
+              //   this.setState({isloading:false})
+              //   return(
+              //     <View style={{flexDirection:'row'}}>
+              //       <Text>
+              //         aa
+              //       </Text>
+              //       <Divider orientation='horizontal'/>
+              //     </View>
+              //   );
+              // }
+              return(
               <TouchableOpacity
               onPress={()=>{
                 url1=`https://news-at.zhihu.com/api/3/story/${item.id}`;
@@ -125,22 +139,26 @@ export default class mainscreen extends Component {
                   />
                 </View>
               </TouchableOpacity>
-            )}
+              )
+            }}
             style={{backgroundColor:'#ffffff'}}
-            onEndReachedThreshold={.1}
+            ListFooterComponent={() => (this.state.isloading ? <ActivityIndicator size="large" color="#0000ff" /> : null)}
+            onEndReachedThreshold={0.1}
             onEndReached={() => {
-              this.setState({isloading:true});
+              //Alert.alert('jiazai');
+              this.setState({isloading:false});
               this.setState({pastdate:new Date(this.state.pastdate - 1 * 24 * 3600 * 1000)});
-                fecth(`https://news-at.zhihu.com/api/3/news/before/${this.state.datestring(new Date(this.state.pastdate))}`)
-              .then((response)=>response.json)
+                fetch(`https://news-at.zhihu.com/api/3/news/before/${this.state.datestring(new Date(this.state.pastdate))}`)
+              .then((response)=>response.json())
               .then((json)=>{
                 console.log(json);
-                this.setState({news:news+json.stories});
+                // this.setState({isloading:false})
+                this.setState({news: [...this.state.news, ...json.stories]});
                 console.log(this.state.news);
               })
               .catch((error) => console.error(error))
               .finally(()=>{
-                this.setState({isloading:false});
+                this.setState({isloading:true});
               })
             }}
             />
